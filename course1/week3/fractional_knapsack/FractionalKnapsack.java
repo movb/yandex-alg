@@ -1,9 +1,32 @@
 import java.util.Scanner;
+import java.util.*;
 
 public class FractionalKnapsack {
     private static double getOptimalValue(int capacity, int[] values, int[] weights) {
         double value = 0;
-        //write your code here
+        
+        double[] price = new double[values.length];
+        Integer[] indexes = new Integer[values.length];
+        
+        for(int i=0;i<values.length;++i)
+        {
+            price[i] = values[i]/(double)weights[i];
+            indexes[i] = i;
+        }
+        
+        Arrays.sort(indexes, Collections.reverseOrder(Comparator.comparing((ind) -> price[ind])));
+        
+        for(int i=0;i<values.length;++i)
+        {
+            int ind = indexes[i];
+            if(weights[ind]<capacity) {
+                value += values[ind];
+                capacity-=weights[ind];
+            } else {
+                value += (capacity/(double)weights[ind]) * values[ind];
+                break;
+            }
+        }
 
         return value;
     }
