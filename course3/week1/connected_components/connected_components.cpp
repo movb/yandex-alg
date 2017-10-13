@@ -4,9 +4,28 @@
 using std::vector;
 using std::pair;
 
+void explore(int x, vector<vector<int> > & adj, vector<bool>& visited)
+{
+    visited[x] = true;
+    for(int i=0;i<adj[x].size();++i) {
+        if (!visited[adj[x][i]])
+            explore(adj[x][i], adj, visited);
+    }
+}
+
 int number_of_components(vector<vector<int> > &adj) {
   int res = 0;
+
   //write your code here
+  vector<bool> visited(adj.size(), false);
+
+  for(int i=0;i<adj.size();++i) {
+      if (!visited[i]) {
+          res++;
+          explore(i, adj, visited);
+      }
+  }
+
   return res;
 }
 
