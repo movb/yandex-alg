@@ -4,10 +4,31 @@
 
 using std::vector;
 using std::queue;
+using std::pair;
+using std::make_pair;
 
 int distance(vector<vector<int> > &adj, int s, int t) {
   //write your code here
-  return -1;
+  queue<int> q;
+  vector<int> dist(adj.size(), -1);
+  dist[s] = 0;
+  q.push(s);
+
+  while(!q.empty())
+  {
+      auto v = q.front();
+      q.pop();
+
+      for(int i=0; i<adj[v].size(); ++i)
+      {
+          if(dist[adj[v][i]] == -1) {
+              q.push(adj[v][i]);
+              dist[adj[v][i]] = dist[v] + 1;
+          }
+      }
+  }
+
+  return dist[t];
 }
 
 int main() {
