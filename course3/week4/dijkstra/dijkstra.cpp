@@ -1,6 +1,8 @@
 #include <iostream>
 #include <vector>
 #include <queue>
+#include <limits>
+#include <functional>
 
 using std::vector;
 using std::queue;
@@ -9,7 +11,30 @@ using std::priority_queue;
 
 int distance(vector<vector<int> > &adj, vector<vector<int> > &cost, int s, int t) {
   //write your code her
-  return -1;
+  vector<int> dist(adj.size(), std::numeric_limits<int>::max());
+  dist[s] = 0;
+  vector<int> processed(adj.size(), 0);
+  priority_queue<pair<int,int>, vector<pair<int,int>>, std::greater<pair<int,int>>> q;
+  for(int i=0; i<dist.size(); ++i)
+      q.emplace( dist[i], i );
+  
+  while(!q.empty()) {
+      int u = q.top().second;
+      q.pop();
+      if(processed[u])
+          continue;
+      if(dist[u] == std::numeric_limits<int>::max())
+          break;
+      processed[u] = 1;
+      for(int j=0; j<adj[u].size(); ++j) {
+          if (dist[adj[u][j]] > (dist[u] + cost[u][j])) {
+              dist[adj[u][j]] = dist[u] + cost[u][j];
+              q.emplace(dist[adj[u][j]], adj[u][j]);
+          }
+      }
+  }
+          
+  return dist[t] == std::numeric_limits<int>::max() ? -1 : dist[t];
 }
 
 int main() {
