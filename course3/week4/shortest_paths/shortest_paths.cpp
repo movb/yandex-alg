@@ -7,9 +7,43 @@ using std::vector;
 using std::queue;
 using std::pair;
 using std::priority_queue;
+using std::numeric_limits;
 
 void shortest_paths(vector<vector<int> > &adj, vector<vector<int> > &cost, int s, vector<long long> &distance, vector<int> &reachable, vector<int> &shortest) {
-  //write your code here
+    //write your code here
+
+    distance[s] = 0;
+
+    for(int i=0; i<adj.size()-1; ++i) {
+        for(int j=0; j<adj.size(); j++) {
+            if(distance[j] == numeric_limits<long long>::max())
+                continue;
+            reachable[j] = 1;
+
+            for(int k=0; k<adj[j].size(); ++k) {
+                long long d = distance[j] + cost[j][k];
+                if (distance[adj[j][k]] > d)
+                    distance[adj[j][k]] = d;
+                reachable[adj[j][k]] = 1;
+            }
+        }
+    }
+    
+    for(int i=0; i<adj.size(); ++i) {
+        for(int j=0; j<adj.size(); j++) {
+            if(!reachable[j])
+                continue;
+
+            for(int k=0; k<adj[j].size(); ++k) {
+                long long d = distance[j] + cost[j][k];
+                if (distance[adj[j][k]] > d)
+                {
+                    distance[adj[j][k]] = d;
+                    shortest[adj[j][k]] = 0;
+                }
+            }
+        }
+    }
 }
 
 int main() {
