@@ -44,7 +44,7 @@ int main() {
             opening_brackets_stack.pop();
 
             if(!bracket.Matchc(next)) {
-                std::cout << bracket.position + 1 << std::endl;
+                std::cout << position + 1 << std::endl;
                 return 0;
             }
         }
@@ -52,15 +52,13 @@ int main() {
 
     // Printing answer, write your code here
     if (!opening_brackets_stack.empty()) {
-        int pos = opening_brackets_stack.top().position;
-        /*
+        //int pos = opening_brackets_stack.top().position;
         int pos = 0;
         while(!opening_brackets_stack.empty()) {
             auto bracket = opening_brackets_stack.top();
             opening_brackets_stack.pop();
             pos = bracket.position;
         }
-        */
         std::cout << pos + 1 << std::endl;
         return 0;
     }
