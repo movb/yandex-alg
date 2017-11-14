@@ -1,9 +1,13 @@
 #include <algorithm>
 #include <iostream>
 #include <vector>
+#include <queue>
 #if defined(__unix__) || defined(__APPLE__)
 #include <sys/resource.h>
 #endif
+
+using std::queue;
+using std::pair;
 
 class Node;
 
@@ -40,14 +44,29 @@ int main_with_large_stack_space() {
   }
 
   // Replace this code with a faster implementation
-  int maxHeight = 0;
-  for (int leaf_index = 0; leaf_index < n; leaf_index++) {
-    int height = 0;
-    for (Node *v = &nodes[leaf_index]; v != NULL; v = v->parent)
-      height++;
-    maxHeight = std::max(maxHeight, height);
+  Node *root;
+  for(int i=0; i<nodes.size(); ++i) {
+      if (nodes[i].parent == NULL)
+          root = &nodes[i];
   }
-    
+
+  queue<pair<Node *,int>> q;
+  int maxHeight = 0;
+
+  q.emplace(root, 1);
+
+  while(!q.empty()) {
+      auto node = q.front();
+      q.pop();
+      
+      if (node.second > maxHeight)
+          maxHeight = node.second;
+
+      for(auto child: node.first->children) {
+          q.emplace(child, node.second+1);
+      }
+  }
+
   std::cout << maxHeight << std::endl;
   return 0;
 }
