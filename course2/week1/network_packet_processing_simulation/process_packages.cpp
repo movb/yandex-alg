@@ -31,6 +31,20 @@ public:
 
     Response Process(const Request &request) {
         // write your code here
+        while(!finish_time_.empty() && finish_time_.front() <= request.arrival_time) {
+            finish_time_.pop();
+        }
+
+        if (finish_time_.size() == size_)
+            return Response(true, 0);
+
+        int processing_time = request.arrival_time;
+        if (!finish_time_.empty())
+            processing_time = std::max(request.arrival_time, finish_time_.back());
+
+        finish_time_.push(processing_time + request.process_time);
+
+        return Response(false, processing_time);
     }
 private:
     int size_;
