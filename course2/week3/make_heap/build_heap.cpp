@@ -29,22 +29,63 @@ class HeapBuilder {
       cin >> data_[i];
   }
 
+  int size() {
+      return data_.size();
+  }
+
+  int parent(int i) {
+      return i/2;
+  }
+
+  int left(int i) {
+      return 2*i+1;
+  }
+
+  int right(int i) {
+      return 2*i+2;
+  }
+
+  bool compare(int first, int second) {
+      // min heap
+      return first > second;
+  }
+
+  void swap(int first, int second) {
+      swaps_.emplace_back(first, second);
+      std::swap(data_[first], data_[second]);
+  }
+
+  void siftUp(int i) {
+      while( i > 0 && compare(data_[parent(i)], data_[i]) ) {
+          swap(parent(i), i);
+          i = parent(i);
+      }
+  }
+
+  void siftDown(int i) {
+      int maxIndex = i;
+
+      int l = left(i);
+      int r = right(i);
+
+      if (l < size() && compare(data_[maxIndex], data_[l]))
+          maxIndex = l;
+
+      if (r < size() && compare(data_[maxIndex], data_[r]))
+          maxIndex = r;
+
+      if (i != maxIndex) {
+          swap(i, maxIndex);
+          siftDown(maxIndex);
+      }
+  }
+
   void GenerateSwaps() {
     swaps_.clear();
-    // The following naive implementation just sorts 
-    // the given sequence using selection sort algorithm
-    // and saves the resulting sequence of swaps.
-    // This turns the given array into a heap, 
-    // but in the worst case gives a quadratic number of swaps.
-    //
-    // TODO: replace by a more efficient implementation
-    for (int i = 0; i < data_.size(); ++i)
-      for (int j = i + 1; j < data_.size(); ++j) {
-        if (data_[i] > data_[j]) {
-          swap(data_[i], data_[j]);
-          swaps_.push_back(make_pair(i, j));
-        }
-      }
+
+    for(int i=size()-1; i>=0; i--) {
+        siftDown(i);
+    }
   }
 
  public:
